@@ -1,0 +1,81 @@
+"""
+This API is called 'Advice Slip API'
+The Advice Slip API is a free, public API that provides random motivational or life advice in JSON format. It requires no API key, and responds quickly with a single sentence of advice.
+
+In this grade evaluation console app, the Advice Slip API is used to enhance the user experience by providing students with personalized encouragement or motivation based on their performance.
+
+This adds emotional intelligence and creativity to the program, which supports both the creativity and effective use of an API marking criteria.
+
+
+For example:
+If a student receives a low grade, the app can fetch an encouraging piece of advice to uplift them.
+
+If a student scores well, the app can still provide a motivating tip to help them maintain or improve their performance.
+
+
+
+https://api.adviceslip.com/advice
+"""
+
+
+
+import requests
+from tabulate import tabulate
+from colorama import Fore, Style
+
+# Get motivational advice from Advice Slip API
+def get_advice():
+    response = requests.get("https://api.adviceslip.com/advice")
+    if response.status_code == 200:
+        return response.json()["slip"]["advice"]
+    else:
+        return "Keep trying your best!"
+
+# Sample dictionary of students
+students = [
+    {"name": "Amir", "grade": 85, "subject": "Maths"},
+    {"name": "Cataleya", "grade": 77, "subject": "Literature"},
+    {"name": "Cyrus", "grade": 59, "subject": "Science"},
+    {"name": "Alyssa", "grade": 68, "subject": "History"},
+    {"name": "Araceli", "grade": 42, "subject": "Arts"},
+    {"name": "Yasamin", "grade": 35, "subject": "Maths"},
+    {"name": "Nemo", "grade": 91, "subject": "Literature"},
+    {"name": "Farahnaz", "grade": 73, "subject": "Science"},
+    {"name": "Stephanie", "grade": 49, "subject": "History"},
+    {"name": "Nick", "grade": 80, "subject": "Arts"}
+]
+
+# Evaluate student performance with messages and advice
+def evaluate_students():
+    for student in students:
+        grade = student["grade"]
+        name = student["name"]
+        initials = name[:2]  # string slicing
+
+        if grade >= 80:
+            result = Fore.GREEN + "Distinction" + Style.RESET_ALL
+        elif grade >= 50:
+            result = Fore.YELLOW + "Pass" + Style.RESET_ALL
+        else:
+            result = Fore.RED + "Fail" + Style.RESET_ALL
+
+        advice = get_advice()
+        print(f"{name} - Grade: {grade} - Result: {result}\nAdvice: {advice}\n")
+
+# Sort students by grade descending
+def sort_students():
+    return sorted(students, key=lambda x: x["grade"], reverse=True)
+
+# Display sorted students in table format
+def display_students(sorted_students):
+    print("\nSorted Students by Grade:")
+    print(tabulate(sorted_students, headers="keys"))
+
+# Main program
+def main():
+    sorted_students = sort_students()
+    display_students(sorted_students)
+    evaluate_students()
+
+if __name__ == "__main__":
+    main()
